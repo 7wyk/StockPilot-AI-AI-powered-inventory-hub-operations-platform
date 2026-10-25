@@ -12,21 +12,21 @@ The repository contains a frontend/backend monorepo, environment examples, pnpm 
 
 ## Phase 2 — Database and identity — IN_PROGRESS
 
-Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; and identity/tenant tests. The verified backend suite currently passes 4 tests.
+Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; and identity/tenant tests. Remaining: password recovery/reset, organization switching, invitations and membership administration, explicit role permission endpoints/tests, authentication/sensitive-endpoint rate limiting, and broader audit coverage.
 
-Remaining acceptance work: password recovery/reset, organization switching, invitations and membership administration, explicit role permission endpoints/tests, authentication/sensitive-endpoint rate limiting, and any additional audit coverage. Verify tenant isolation and the permission matrix before high-impact inventory mutations.
+Dependencies: Phase 1. Verification so far: 4 backend tests pass.
 
-Dependencies: Phase 1. Verification: auth, expiration, role, organization isolation, validation, and API permission tests.
+## Phase 3 — Core inventory — IN_PROGRESS
 
-## Phase 3 — Core inventory — TODO
+Implemented so far: normalized organization-scoped categories, products, hubs, suppliers and supplier-product links; product/hub balances with database constraints; immutable signed stock movements; tenant-scoped DRF APIs for categories, products, hubs, suppliers, movements, dashboard summary, and product stock mutations; idempotency keys; row locking; receipt/issue/adjustment validation; negative/available-stock protection; audit records; migrations; and seven backend tests.
 
-Implement categories, products, hubs, suppliers, supplier relationships, balances, movements, adjustments, dashboard aggregates, secure file metadata, and transactional inventory services. Verify all consequential balance changes create immutable movements and cannot create negative balances.
+Remaining: richer pagination/filtering, supplier workflows, reservation semantics, frontend API wiring, and additional performance/security coverage. Every quantity-changing operation must continue to use the transactional service boundary rather than direct model writes.
 
-Dependencies: Phase 2. Verification: CRUD, query scope/pagination, transaction integrity, movement consistency, and empty-database onboarding.
+Dependencies: Phase 2. Verification: migration drift check, Django check, and 7 backend tests pass.
 
 ## Phase 4 — Transfers and restocking — TODO
 
-Implement transparent restock suggestions, transfer state transitions, approval roles, idempotency/concurrency protections, and audit/movement records. Verify duplicate dispatch/receipt protection, source availability, and permission enforcement.
+Implement restock requests and inter-hub transfers with explicit lifecycle states, permission checks, source-availability validation, idempotent dispatch/receipt operations, movement/audit records, and backend tests. Verify duplicate dispatch/receipt protection, source availability, and permission enforcement.
 
 Dependencies: Phase 3. Verification: lifecycle, concurrency, rollback, and authorization tests.
 
