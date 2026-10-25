@@ -8,25 +8,25 @@ Read `README.md`, `PROJECT_STATUS.md`, `IMPLEMENTATION_PLAN.md`, and `ARCHITECTU
 
 - Managed Webdev project directory: `/home/ubuntu/stockpilot`.
 - Branch: `main`.
-- Phase 0 planning and the Phase 1 foundation milestone are complete in the current working tree; the next task is Phase 2 identity and tenancy.
-- The requested GitHub repository is empty; the active canonical repository is still Managed by Manus.
-- Server and managed database capabilities are enabled; the frontend dev server is available on port 3000 during this session.
+- Phase 1 foundation is complete. Phase 2 identity/tenancy is in progress.
+- The requested GitHub repository transition was declined; the managed repository remains canonical. Do not reopen the transfer unless the user explicitly asks.
+- Server/database capabilities are enabled; frontend Preview runtime is port 3000.
 
 ## What works
 
-The backend runs Django checks and serves `/api/v1/health/`. The first backend health test passes. The frontend has a real Vite/React landing page and responsive workspace shell with honest empty states for Overview, Inventory, Hubs, Transfers, Reports, Activity, Settings, and AI Assistant. The route manifest is served at `/manus-routes.json`. Frontend typecheck, lint, tests (2), and production build pass.
+The backend serves `/api/v1/health/` and OpenAPI routes. Identity models and migrations exist for organizations, memberships, invitations, profiles, and audit events. Registration transactionally creates an owner organization, JWT email-compatible login returns access/refresh tokens, refresh/logout/me routes exist, token blacklist support is installed, and `GET /api/v1/organizations/` returns only the authenticated user's active memberships. Four backend tests pass, including tenant isolation. The frontend has the polished landing page and responsive shell with route manifest and empty states; its typecheck, lint, two tests, and production build pass.
 
 ## Exact next task
 
-Implement organizations, memberships, roles, permission classes, JWT access/refresh endpoints, protected route foundations, and tenant-isolation tests. Keep the requested production boundary: Supabase PostgreSQL when `DATABASE_URL` is a PostgreSQL DSN; local SQLite fallback only for unsupported/missing DSNs during local checks.
+Finish Phase 2: password recovery/reset, organization switching, invitations and membership administration, explicit role permission endpoints/tests, and rate limiting for authentication/sensitive endpoints. Then implement Phase 3 normalized categories/products/hubs/suppliers and read-only inventory views before transactional stock services.
 
 ## Commands/checks
 
-From the repository root: `pnpm install --frozen-lockfile`. Frontend: `pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build`. Backend: `cd backend && ../.venv/bin/python manage.py check && ../.venv/bin/pytest -q -rs`. Preview: `pnpm --dir frontend dev` and verify `/manus-routes.json`.
+From root: `pnpm install --frozen-lockfile`. Frontend: `pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build`. Backend: `cd backend && ../.venv/bin/python manage.py check && ../.venv/bin/pytest -q -rs`. Preview: `pnpm --dir frontend dev` and verify `/manus-routes.json`.
 
 ## Known blockers
 
-No Supabase, Upstash, or Groq credentials are available in this session. Keep adapters configurable and make missing integrations fail explicitly without breaking core health/tests. No deployment URL is verified. Connecting the project to the requested GitHub repository requires the platform's owner-confirmed canonical-transfer flow.
+No Supabase, Upstash, or Groq credentials are available. Keep external adapters configurable and make missing integrations fail explicitly without breaking core tests. No deployment URL is verified. Production PostgreSQL integration still needs a Supabase DSN; local unsupported-DSN checks use SQLite.
 
 ## Related documents
 

@@ -8,13 +8,13 @@ The managed project was initialized, the empty requested GitHub repository was i
 
 ## Phase 1 — Foundation — DONE
 
-The repository now contains a frontend/backend monorepo, environment examples, pnpm workspace policy and lockfile, lint/format/typecheck/test commands, Django settings and API structure, an unauthenticated health/readiness endpoint, OpenAPI documentation routes, route manifest, accessible frontend shell, CI, and initial tests. Verification completed: Django check passed; backend health test passed; frontend typecheck, lint, two Vitest tests, and Vite production build passed; the dev server served the route manifest and landing HTML.
-
-Dependencies: none. Evidence is recorded in `PROJECT_STATUS.md` and `docs/RESUME_HERE.md`.
+The repository contains a frontend/backend monorepo, environment examples, pnpm workspace policy and lockfile, lint/format/typecheck/test commands, Django settings and API structure, an unauthenticated health/readiness endpoint, OpenAPI documentation routes, route manifest, accessible frontend shell, CI, and initial tests. Verification completed: Django check and health test passed; frontend typecheck, lint, two Vitest tests, and Vite production build passed; the dev server served the route manifest and landing HTML.
 
 ## Phase 2 — Database and identity — IN_PROGRESS
 
-Implement organizations, memberships, roles, profiles, migrations, JWT authentication, permission classes, tenant scope, rate limits, and authentication audit events. Verify tenant isolation and permission matrices before high-impact inventory mutations.
+Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; and identity/tenant tests. The verified backend suite currently passes 4 tests.
+
+Remaining acceptance work: password recovery/reset, organization switching, invitations and membership administration, explicit role permission endpoints/tests, authentication/sensitive-endpoint rate limiting, and any additional audit coverage. Verify tenant isolation and the permission matrix before high-impact inventory mutations.
 
 Dependencies: Phase 1. Verification: auth, expiration, role, organization isolation, validation, and API permission tests.
 
@@ -26,7 +26,7 @@ Dependencies: Phase 2. Verification: CRUD, query scope/pagination, transaction i
 
 ## Phase 4 — Transfers and restocking — TODO
 
-Implement transparent restock suggestions, internal requests, transfer state transitions, approval roles, idempotency/concurrency protections, and audit/movement records. Verify duplicate dispatch/receipt protection, source availability, and permission enforcement.
+Implement transparent restock suggestions, transfer state transitions, approval roles, idempotency/concurrency protections, and audit/movement records. Verify duplicate dispatch/receipt protection, source availability, and permission enforcement.
 
 Dependencies: Phase 3. Verification: lifecycle, concurrency, rollback, and authorization tests.
 
