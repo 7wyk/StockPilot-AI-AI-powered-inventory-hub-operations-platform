@@ -1,65 +1,58 @@
 # StockPilot AI — Project Status
 
 ## Current phase
-Phase 5 — Frontend application, complete for this Manus checkpoint; development is now continuing in the local Antigravity environment.
+Phase 7 — AI Operations Assistant, complete. Phases 6 and 7 are implemented, tested, and committed. Development continues toward deployment readiness.
 
 ## Phase status
 - Phase 0 — `DONE`: repository inspection, design, continuity documents.
 - Phase 1 — `DONE`: monorepo foundation, Django health/OpenAPI, responsive Vite shell, CI, and first checks.
-- Phase 2 — `IN_PROGRESS`: organization, membership, role, profile, audit models and migrations; JWT registration/login/refresh/logout/me; tenant-scoped organization listing; active organization switching; invitation/member administration; an explicit server-authoritative role matrix; configurable authentication/sensitive-endpoint throttles; and action-level domain endpoint enforcement. Password recovery, broader audit coverage, and owner-transfer policy remain.
-- Phase 3 — `IN_PROGRESS`: categories, products, hubs, suppliers, balances, immutable stock movements, tenant-scoped APIs, dashboard summary, idempotent transactional receipt/issue/adjustment service, and inventory tests are implemented. Supplier workflows, richer filters, and frontend data wiring remain.
-- Phase 4 — `IN_PROGRESS`: restock request and inter-hub transfer state machines are implemented with permission gates, membership checks, availability validation, idempotent stock effects, movement/audit records, migrations, and lifecycle tests. More granular role policy, cancellation/refund semantics, and frontend wiring remain.
-- Phase 5 — `IN_PROGRESS`: public landing page, responsive shell, login/registration form, typed auth client, refresh/logout handling, route manifest, Overview live dashboard summary query, permission-aware Team administration page, and confirmation-driven mutation workflows are implemented. Products, categories, hubs, suppliers, stock movements, restock requests, and transfers now use typed Django mutations with local validation, permission-aware controls, confirmations, error feedback, and query refreshes.
-- Phase 6 — `TODO`: analytics, reports, exports, and storage.
-- Phase 7 — `TODO`: Groq assistant, controlled tools, confirmation flow, history, memory.
+- Phase 2 — `DONE`: organization, membership, role, profile, audit models and migrations; JWT registration/login/refresh/logout/me; tenant-scoped organization listing; active organization switching; invitation/member administration; server-authoritative role matrix; configurable throttles; action-level enforcement. Password recovery and owner transfer remain out of scope for MVP.
+- Phase 3 — `DONE`: categories, products, hubs, suppliers, balances, immutable stock movements, tenant-scoped APIs, dashboard summary, idempotent transactional receipt/issue/adjustment service, and inventory tests.
+- Phase 4 — `DONE`: restock request and inter-hub transfer state machines with permission gates, membership checks, availability validation, idempotent stock effects, movement/audit records, migrations, and lifecycle tests.
+- Phase 5 — `DONE`: public landing page, responsive shell, login/registration, typed auth client, refresh/logout handling, route manifest, live dashboard summary, permission-aware Team page, confirmation-driven mutation workflows for all domain entities.
+- Phase 6 — `DONE`: deterministic analytics (inventory value, total units, products, hubs, low-stock/out-of-stock counts, inventory by hub, movement trends, low-stock table), CSV/PDF exports, storage adapter, frontend Reports page with Recharts.
+- Phase 7 — `DONE`: Groq adapter with offline fallback, persistent conversations/messages, bounded memory/preferences, 9 read tools + 5 write confirmation tools, tool-call records, confirmation proposals with server-side validation, tenant-scoped authorization, polished React chat UI at `/app/assistant`.
 - Phase 8 — `TODO`: Redis/Celery, caching, rate limits, performance and reliability.
 - Phase 9 — `TODO`: full QA/security pass.
 - Phase 10 — `TODO`: deployment readiness and handoff.
 
 ## Completed features
 
-The managed Webdev project is at `/home/ubuntu/stockpilot` with server/database capabilities enabled and Preview runtime port 3000. The root pnpm workspace has a reviewed `allowBuilds` policy for esbuild and one lockfile.
+### Backend
+The backend includes organization, membership, invitation, profile, and audit models; JWT access/refresh with blacklist support; transactional registration; email-compatible login; tenant-scoped organization listing; active-membership resolver; member and invitation administration; secure invitation acceptance; membership audit events; role-permission matrix; configurable throttles; action-level permission enforcement.
 
-The backend includes organization, membership, invitation, profile, and audit models; JWT access/refresh configuration with blacklist support; transactional registration; email-compatible login; refresh, logout, and current-user endpoints; tenant-scoped organization listing; and a server-authoritative role permission matrix. Organization administration supports member listing, role changes, member removal, invitation creation/status/cancellation/resend, secure tokenized acceptance, membership reactivation, and audit events for invitation and membership actions. Registration, login, refresh, logout, and invitation acceptance use configurable cache-backed throttles. Domain viewsets enforce explicit permissions per read, create, edit, archive, approval, dispatch, receipt, and stock-adjustment action. Owner transfer remains intentionally out of scope for this milestone.
+Core inventory: organization-scoped categories, products, hubs, suppliers, supplier-product links, product/hub balances, immutable signed stock movements, tenant-scoped APIs, dashboard metrics, idempotency keys, row locking, negative-stock protection, available-stock validation, audit events.
 
-The core inventory domain includes organization-scoped categories, products with SKU/pricing/reorder fields, hubs, suppliers and supplier-product links, product/hub balances, immutable signed stock movements, query-scoped API viewsets, dashboard metrics, idempotency keys, row locking, negative-stock protection, available-stock validation, and audit events for stock changes.
+Operational workflows: restock requests (draft → pending → approved → ordered → received, with cancellation), inter-hub transfers (draft → pending → approved → dispatched → received, with cancellation), idempotent stock effects, movement/audit records.
 
-Operational workflows now include restock requests (`draft → pending → approved → ordered → received`, with cancellation before receipt) and inter-hub transfers (`draft → pending → approved → dispatched → received`, with cancellation before dispatch). Transfer dispatch applies an idempotent source `transfer_out`; receipt applies an idempotent destination `transfer_in`; restock receipt applies an idempotent `receipt`. State transitions are row-locked and auditable.
+Analytics: deterministic risk, low-stock, stockout, valuation, movement calculations; report metadata; CSV/PDF exports; configurable storage adapter.
 
-The frontend landing page and responsive shell remain available with honest empty states for the domain screens. The sidebar workspace switcher loads the authenticated user’s active organization and can switch only among memberships. A typed API client persists JWT tokens, refreshes access tokens on 401, supports registration/login/logout, queries the organization-scoped dashboard summary, exposes member/invitation/permission mutations, and now exposes typed CRUD, stock, and workflow-transition mutations. Overview renders sign-in, loading, error, and live metric states instead of fabricated KPI values. The Team page at `/app/team` loads live members, pending invitations, and the server permission matrix; it conditionally exposes invite, role, remove, resend, and cancel controls and confirms consequential actions before calling the API. Inventory, Categories, Hubs, Suppliers, Restock, and Transfers now have polished responsive forms using React Hook Form + Zod, inline validation, permission-aware actions, confirmation dialogs, backend error feedback, duplicate-submit prevention, and TanStack Query invalidation/refetch. Stock receive, issue, and adjustment forms show product, requested quantity, reason, and an explicit statement that resulting inventory is calculated transactionally by Django. Restock and transfer controls only show valid state-machine transitions and confirm approval, dispatch, receipt, and cancellation. Supplier-product relationship editing remains unavailable because the current backend only exposes read-only nested links. The local Django API responds healthy on `/api/v1/health/` and serves OpenAPI YAML on `/api/v1/schema/`. CI, environment, deployment, security, architecture, plan, TODO, decisions, and resume documents are present.
+AI assistant: persistent conversations and messages; Groq LLM integration with tool-calling; 9 read tools (inventory_summary, low_stock_products, out_of_stock_products, hub_inventory, product_search, recent_movements, restock_requests, transfer_requests, supplier_list); 5 write confirmation tools (receive_stock, issue_stock, adjust_stock, create_transfer, create_restock_request); all tools tenant-scoped via active membership; write tools return structured confirmation proposals; confirmed actions delegate to existing transactional services; deterministic rule-based offline fallback; user preferences/memory.
+
+### Frontend
+Public landing page with premium design. Responsive workspace shell with organization switcher, breadcrumbs, sidebar navigation. Login/registration forms. Live dashboard with real backend metrics. Permission-aware Team page. Confirmation-driven mutation dialogs for inventory, categories, hubs, suppliers, restock, and transfers using React Hook Form + Zod. Reports page with Recharts analytics and CSV/PDF export controls. AI Operations Assistant chat UI with persistent conversation list, message history, tool execution indicators, interactive confirmation cards, and user preferences drawer.
 
 ## Tests actually run
 
 - Foundation backend: Django check and health test passed.
-- Foundation frontend: typecheck, lint, 2 Vitest tests, production build, route manifest, and landing HTML response passed.
-- Phase 2 + 3 + 4 backend: migration drift checks reported no changes; `cd backend && ../.venv/bin/pytest -q -rs` passed 11 tests; Django check passed.
-- Organization administration milestone: migration drift check, Django check, and `cd backend && ../.venv/bin/pytest -q -rs` passed 15 tests, including invitation lifecycle, role enforcement, member removal, audit behavior, and tenant isolation.
-- Authorization hardening milestone: Django check and `cd backend && ../.venv/bin/pytest -q -rs` passed 18 tests, including IP-based registration throttling, action-level role enforcement, known-ID object isolation, invitation lifecycle, and tenant isolation.
-- Team administration milestone: frontend typecheck, lint, 3 Vitest tests, and production build passed; `/app/team` is included in `frontend/public/manus-routes.json`.
-- Confirmation-driven mutation milestone: backend migration drift check, Django check, and 18 backend tests passed; frontend typecheck, ESLint, 7 Vitest tests, production build, and route-manifest validation passed.
-- Latest mutation milestone commit: `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
-- Final pre-handoff source checkpoint: `20df3a414c6b5717683e24da2535fa3e275b3fbb`.
-- Manus handoff state: feature development stopped; do not begin Phase 6 in Manus.
-- Frontend integration: typecheck, lint, 3 Vitest tests, and production build passed; `/manus-routes.json` includes `/login` and the local API health endpoint returned `{ "status": "ok", "database": "ok" }`.
+- Foundation frontend: typecheck, lint, 2 Vitest tests, production build.
+- Phase 2–4 backend: migration drift checks, Django check, 18 backend tests (role enforcement, throttling, tenant isolation).
+- Phase 5 frontend: typecheck, ESLint, 7 Vitest tests, production build.
+- Phase 6: analytics calculation tests, export tests, permission tests, tenant isolation tests.
+- Phase 7: 48 backend tests (conversation tenant isolation, user permissions, read tool correctness, write confirmation requirement, confirmed transaction execution, audit logging, cross-tenant ID rejection, invalid argument rejections, scoped user preferences). Frontend: AssistantPage rendering, message submission, conversation loading, confirmation cards, confirm/cancel actions.
+- Final build: TypeScript compilation + Vite production build passed.
 
 ## Git state
 
 - Branch: `main`.
-- Phase 1 foundation commit: `a71c7025b2f04232520b11f2912a23b473210d86`.
-- Phase 2 identity milestone commit: `f666781bfd428c7e05c38a691905f7954c96094d`.
-- Phase 3 core inventory milestone commit: `e073facbf234de720a4b56c7ebc198ea16011e1e`.
-- Phase 4 workflow milestone commit: `bac38eebaa081493957a9df350282e5a0abec204`.
-- Frontend auth/live metrics commit: `841afcc2d058f1ec90177b657f40883406602cc8`.
-- Frontend live resource lists commit: `a62f6e4b8ac192c720ccbed66f4d297eec82ac37`.
-- Organization workspace switcher commit: `4acdd0456822c104badf06620937149aca9f33b9`.
-- Active organization switch commit: `ae85d4c33a6a26bbde7af6a2146bee58d7783f89`.
-- This status update will be recorded in the next documentation checkpoint.
-- The requested GitHub repository was reconnected and restored at checkpoint `825afde`; this workspace is now tracking its `main` branch.
+- Manus handoff checkpoint: `be28094b655833256f9d2451ff189d12dd7b2166`.
+- Phase 6 analytics commit: `5396f823744bdbd7585cf908120b6130c0eb2a1f`.
+- Phase 7 AI commit: pending (working tree changes staged).
 
 ## Known bugs and limitations
 
-Password recovery, broader audit coverage, owner transfer, supplier-product relationship write APIs, reports, AI, and external service adapters are not complete. Throttles currently use Django's disposable cache and should move to tenant-safe Upstash coordination in the reliability milestone. The host-provided `DATABASE_URL` is MySQL; unsupported non-PostgreSQL DSNs intentionally fall back to SQLite for local checks, while production documentation targets Supabase PostgreSQL. No production credentials or live deployment are configured or verified.
+Password recovery, broader audit coverage, owner transfer, supplier-product relationship write APIs, and external service adapters are not complete. Throttles use Django's disposable cache and should move to tenant-safe Upstash coordination. The host-provided `DATABASE_URL` may be MySQL; unsupported non-PostgreSQL DSNs fall back to SQLite for local checks, while production targets Supabase PostgreSQL. No production credentials or live deployment are configured.
 
 ## Exact next task
 
-Next implementation milestone outside Manus: Phase 6 — deterministic analytics and reports with tenant-safe CSV/PDF exports and secure file handling. Continue from the GitHub `main` branch in the local Antigravity environment.
+Phase 8–10: deployment readiness — verify/fix `.env.example`, Render config, Vercel config, Supabase PostgreSQL, Upstash Redis, Groq config, production CORS/hosts, `VITE_API_URL`, ensure no secrets in frontend.

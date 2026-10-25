@@ -6,33 +6,70 @@ Read `README.md`, `PROJECT_STATUS.md`, `IMPLEMENTATION_PLAN.md`, and `ARCHITECTU
 
 ## Current state
 
-- Managed Webdev project directory: `/home/ubuntu/stockpilot`.
-- Branch: `main`; Phase 1 foundation, Phase 2 identity foundation, Phase 3 core inventory, and Phase 4 workflow milestones are committed.
-- The requested GitHub repository transition was declined; the managed repository remains canonical. Do not reopen the transfer unless the user explicitly asks.
-- Server/database capabilities are enabled; frontend Preview runtime is port 3000.
-- Final Manus-to-local handoff: source checkpoint `20df3a414c6b5717683e24da2535fa3e275b3fbb` is pushed to `main`. Feature development is stopped in Manus; continue in the local Antigravity environment.
+- Repository: `https://github.com/7wyk/StockPilot-AI-AI-powered-inventory-hub-operations-platform`
+- Branch: `main`; Phases 1–7 are committed.
+- Manus handoff checkpoint: `be28094b655833256f9d2451ff189d12dd7b2166`.
+- Phase 6 analytics commit: `5396f823744bdbd7585cf908120b6130c0eb2a1f`.
+- Phase 7 AI commit: see HEAD of `main`.
+- Virtual environment: `.venv/` at repository root.
 
 ## What works
 
-The backend serves health and OpenAPI routes. Identity models and migrations exist for organizations, memberships, invitations, profiles, and audit events. Registration transactionally creates an owner organization, JWT email-compatible login returns access/refresh tokens, refresh/logout/me routes exist, token blacklist support is installed, organization listing is tenant-scoped, and a member can switch the profile-selected active organization only to another membership they own.
+### Backend
+- Health and OpenAPI routes
+- Identity: organizations, memberships, invitations, profiles, audit events, JWT auth, tenant scoping, role-permission matrix, throttles
+- Inventory: categories, products, hubs, suppliers, balances, stock movements, dashboard metrics, transactional stock operations
+- Workflows: restock requests and inter-hub transfers with full state machines
+- Analytics: deterministic calculations, CSV/PDF exports, storage adapter
+- AI Assistant: persistent conversations, Groq LLM integration with 9 read tools + 5 write confirmation tools, all tenant-scoped, deterministic offline fallback, user preferences
 
-The core inventory backend has categories, products, hubs, suppliers, supplier-product links, product/hub balances, immutable signed stock movements, tenant-scoped APIs, dashboard summary metrics, idempotent stock receipt/issue/adjustment operations, row locking, negative/available-stock protections, and audit records. Restock and transfer APIs implement row-locked lifecycle transitions with permission gates and idempotent movement effects. Organization administration includes tenant-scoped member listing, role changes, removal, invitation lifecycle, secure token acceptance, membership reactivation, and a server-authoritative role-permission matrix. Authentication and invitation acceptance use configurable cache-backed throttles, and domain viewsets enforce action-level permissions. The full backend suite passes 18 tests, including role enforcement, throttling, and tenant isolation. The frontend Team page at `/app/team` is wired to live member, invitation, and permission APIs, with permission-aware controls and confirmations for consequential access changes. Inventory, Categories, Hubs, Suppliers, Restock, and Transfers now have live React Hook Form + Zod mutation dialogs, typed API calls, server-permission UX, state-machine action controls, confirmation reviews, error feedback, and query refreshes. Stock forms never calculate authoritative balances client-side. Supplier-product relationship editing is intentionally unavailable because the existing backend only exposes read-only nested links. Frontend typecheck, lint, 7 tests, and production build pass. The local API health endpoint is verified. The mutation checkpoint is `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
+### Frontend
+- Premium landing page with dark-mode hero
+- Responsive workspace shell with sidebar, org switcher, breadcrumbs
+- Login/registration with JWT handling
+- Live dashboard overview with real backend metrics
+- Permission-aware Team administration
+- Confirmation-driven CRUD for all domain entities (React Hook Form + Zod)
+- Reports page with Recharts analytics and export controls
+- AI Operations Assistant chat with conversation sidebar, tool indicators, confirmation cards, preferences drawer
+
+### Verified test results
+- 48 backend tests pass (all phases including AI)
+- Frontend TypeScript check, ESLint, Vitest unit tests, and Vite production build pass
 
 ## Exact next task
 
-Begin Phase 6 analytics and reports: deterministic tenant-scoped risk/valuation/movement calculations, CSV/PDF exports, secure file handling, and export tests. Keep integrations explicit and do not mark provider-dependent storage complete without credentials.
-
-Do not start this milestone in Manus. Clone or pull `https://github.com/7wyk/StockPilot-AI-AI-powered-inventory-hub-operations-platform` on branch `main` and continue locally.
+Deployment readiness (Phases 8–10):
+1. Verify `.env.example` has all required variables
+2. Configure Render backend deployment (`render.yaml`)
+3. Configure Vercel frontend deployment (`vercel.json`)
+4. Set up Supabase PostgreSQL DSN
+5. Configure Upstash Redis
+6. Set Groq API key in production
+7. Verify production CORS/allowed hosts
+8. Ensure `VITE_API_URL` points to production API
+9. Ensure no secrets in frontend bundle
+10. Create demo seed instructions or management command
 
 ## Commands/checks
 
-From root: `pnpm install --frozen-lockfile`. Frontend: `pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build`. Backend: `cd backend && ../.venv/bin/python manage.py check && ../.venv/bin/pytest -q -rs`. Preview: `pnpm --dir frontend dev` and verify `/manus-routes.json`.
+Backend (from `backend/`):
+```
+..\.venv\Scripts\python.exe manage.py check
+..\.venv\Scripts\python.exe -m pytest tests/ -x -q --tb=short
+```
+
+Frontend (from `frontend/`):
+```
+pnpm run typecheck
+pnpm run lint
+pnpm run test
+pnpm run build
+```
 
 ## Known blockers
 
-No Supabase, Upstash, or Groq credentials are available. Keep external adapters configurable and make missing integrations fail explicitly without breaking core tests. No deployment URL is verified. Production PostgreSQL integration still needs a Supabase DSN; local unsupported-DSN checks use SQLite.
-
-Required external setup remains Supabase PostgreSQL, Supabase Storage, Upstash Redis, Groq API, Render, Vercel, production environment variables, and email delivery if required.
+No Supabase, Upstash, or Groq credentials are available. Keep external adapters configurable and make missing integrations fail explicitly without breaking core tests. No deployment URL is verified. Production PostgreSQL needs a Supabase DSN; local unsupported-DSN checks use SQLite.
 
 ## Related documents
 

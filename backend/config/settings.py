@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "apps.restocking",
     "apps.transfers",
     "apps.analytics",
+    "apps.ai",
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,6 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "None" if not DEBUG else "Lax"
 SESSION_COOKIE_SECURE = not DEBUG
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile")

@@ -142,6 +142,79 @@ export type ReportRecord = {
   requested_by_email: string | null
 }
 
+export type AIToolCall = {
+  id: string
+  name: string
+  arguments: Record<string, unknown>
+}
+
+export type AIWriteProposal = {
+  requires_confirmation: boolean
+  action: string
+  operation_label?: string
+  parameters: {
+    product_id?: number
+    product_name?: string
+    product_sku?: string
+    hub_id?: number
+    hub_name?: string
+    source_hub_id?: number
+    source_hub_name?: string
+    destination_hub_id?: number
+    destination_hub_name?: string
+    quantity?: string | number
+    reason?: string
+    [key: string]: unknown
+  }
+  current_state?: {
+    on_hand?: string | number
+    available?: string | number
+    source_on_hand?: string | number
+    source_available?: string | number
+    [key: string]: unknown
+  }
+  proposed_action: string
+  message: string
+}
+
+export type AIToolResult = {
+  tool_call_id: string
+  name: string
+  result: Record<string, unknown> | AIWriteProposal | unknown[]
+}
+
+export type AIMessage = {
+  id: number
+  role: 'user' | 'assistant' | 'system' | 'tool'
+  content: string
+  tool_calls: AIToolCall[]
+  tool_results: AIToolResult[]
+  metadata?: Record<string, unknown>
+  created_at: string
+}
+
+export type AIConversation = {
+  id: number
+  title: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  message_count?: number
+  messages?: AIMessage[]
+}
+
+export type AIChatResponse = {
+  conversation_id: number
+  conversation_title: string
+  message: AIMessage
+}
+
+export type AIPreference = {
+  key: string
+  value: unknown
+  updated_at: string
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ACCESS_KEY = 'stockpilot.access'
 const REFRESH_KEY = 'stockpilot.refresh'
@@ -259,6 +332,17 @@ export const api = {
     }
     return resp
   },
+
+  // AI Operations Assistant
+  aiConversations: () => request<AIConversation[]>('/ai/conversations/'),
+  aiConversation: (id: number) => request<AIConversation>(`/ai/conversations/${id}/`),
+  createAiConversation: (title?: string) => request<AIConversation>('/ai/conversations/', { method: 'POST', body: JSON.stringify({ title: title ?? 'New conversation' }) }),
+  deleteAiConversation: (id: number) => request<void>(`/ai/conversations/${id}/`, { method: 'DELETE' }),
+  aiChat: (payload: { message: string; conversation_id?: number | null }) => request<AIChatResponse>('/ai/chat/', { method: 'POST', body: JSON.stringify(payload) }),
+  aiConfirmAction: (payload: { action: string; parameters: Record<string, unknown> }) => request<{ status: string; action: string; message: string; [key: string]: unknown }>('/ai/confirm-action/', { method: 'POST', body: JSON.stringify(payload) }),
+  aiPreferences: () => request<AIPreference[]>('/ai/preferences/'),
+  setAiPreference: (key: string, value: unknown) => request<AIPreference>('/ai/preferences/', { method: 'PUT', body: JSON.stringify({ key, value }) }),
+  deleteAiPreference: (key: string) => request<void>(`/ai/preferences/${key}/`, { method: 'DELETE' }),
 
   logout: async () => {
     const refresh = window.localStorage.getItem(REFRESH_KEY)

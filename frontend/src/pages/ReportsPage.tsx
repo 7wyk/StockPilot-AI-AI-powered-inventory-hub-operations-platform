@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts'
 import {
   Activity, AlertTriangle, ArrowDownToLine, ArrowRight, BarChart3, Boxes,
-  ChevronDown, Download, FileSpreadsheet, FileText, Filter, Loader2,
+  Download, FileSpreadsheet, FileText, Loader2,
   Package, PackageX, RefreshCw, ShieldAlert, TrendingDown, TrendingUp,
-  Warehouse, X, Zap,
+  Warehouse, X,
   type LucideIcon,
 } from 'lucide-react'
 import { api, authStore } from '../lib/api'

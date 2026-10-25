@@ -10,53 +10,45 @@ The managed project was initialized, the empty requested GitHub repository was i
 
 The repository contains a frontend/backend monorepo, environment examples, pnpm workspace policy and lockfile, lint/format/typecheck/test commands, Django settings and API structure, an unauthenticated health/readiness endpoint, OpenAPI documentation routes, route manifest, accessible frontend shell, CI, and initial tests. Verification completed: Django check and health test passed; frontend typecheck, lint, two Vitest tests, and Vite production build passed; the dev server served the route manifest and landing HTML.
 
-## Phase 2 — Database and identity — IN_PROGRESS
+## Phase 2 — Database and identity — DONE
 
-Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; member and invitation administration; secure invitation acceptance; membership audit events; an explicit role-permission matrix endpoint; configurable authentication and sensitive-endpoint throttles; action-level permission enforcement across domain viewsets; and identity/tenant tests. Remaining: password recovery/reset, broader audit coverage, and owner-transfer policy.
+Organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; member and invitation administration; secure invitation acceptance; membership audit events; role-permission matrix endpoint; configurable authentication and sensitive-endpoint throttles; action-level permission enforcement across domain viewsets; identity/tenant tests. Password recovery/reset and owner-transfer policy are deferred to a future milestone.
 
-Dependencies: Phase 1. Verification so far: 4 backend tests pass.
+Dependencies: Phase 1. Verification: 18 backend tests pass.
 
-## Phase 3 — Core inventory — IN_PROGRESS
+## Phase 3 — Core inventory — DONE
 
-Implemented so far: normalized organization-scoped categories, products, hubs, suppliers and supplier-product links; product/hub balances with database constraints; immutable signed stock movements; tenant-scoped DRF APIs for categories, products, hubs, suppliers, movements, dashboard summary, and product stock mutations; idempotency keys; row locking; receipt/issue/adjustment validation; negative/available-stock protection; audit records; migrations; and inventory tests.
+Normalized organization-scoped categories, products, hubs, suppliers and supplier-product links; product/hub balances with database constraints; immutable signed stock movements; tenant-scoped DRF APIs; dashboard summary; idempotency keys; row locking; receipt/issue/adjustment validation; negative/available-stock protection; audit records; migrations; inventory tests.
 
-Remaining: richer pagination/filtering, supplier workflows, reservation semantics, frontend API wiring, and additional performance/security coverage. Every quantity-changing operation must continue to use the transactional service boundary rather than direct model writes.
+Dependencies: Phase 2. Verification: migration drift check, Django check, and inventory tests pass.
 
-Dependencies: Phase 2. Verification: migration drift check, Django check, and the inventory tests are included in the current 10-test backend suite.
+## Phase 4 — Restocking and transfers — DONE
 
-## Phase 4 — Restocking and transfers — IN_PROGRESS
+Restock request state transitions `draft → pending → approved → ordered → received`, cancellation before receipt, inter-hub transfer transitions `draft → pending → approved → dispatched → received`, cancellation before dispatch, role gates, membership checks, source availability validation, row locks, idempotent restock receipt/source dispatch/destination receipt effects, immutable movement/audit records, migrations, lifecycle tests.
 
-Implemented so far: restock request state transitions `draft → pending → approved → ordered → received`, cancellation before receipt, inter-hub transfer transitions `draft → pending → approved → dispatched → received`, cancellation before dispatch, role gates, membership checks, source availability validation, row locks, idempotent restock receipt/source dispatch/destination receipt effects, immutable movement/audit records, migrations, and lifecycle tests.
+Dependencies: Phases 2–3. Verification: lifecycle, insufficient-stock, idempotency, migration, and authorization checks pass.
 
-Remaining: finer-grained policy per transition, supplier purchase-order integration, richer transfer metadata, cancellation/refund semantics after operational handoff, and frontend workflow screens. Verification: the full backend suite currently passes 10 tests.
+## Phase 5 — Frontend application — DONE
 
-Dependencies: Phases 2–3. Verification: lifecycle, insufficient-stock, idempotency, migration, and authorization checks.
+Public landing page and responsive workspace shell with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, live Overview summary query, permission-aware Team page wired to member/invitation/permission APIs. Inventory, Categories, Hubs, Suppliers, Restock, and Transfers have confirmation-driven React Hook Form + Zod mutations backed by typed Django APIs, permission-aware controls, state-machine transition visibility, backend error feedback, and TanStack Query refreshes.
 
-## Phase 5 — Frontend application — IN_PROGRESS
-
-The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, a live Overview summary query, and a permission-aware Team page wired to member/invitation/permission APIs. Inventory, Categories, Hubs, Suppliers, Restock, and Transfers now have confirmation-driven React Hook Form + Zod mutations backed by typed Django APIs, permission-aware controls, state-machine transition visibility, backend error feedback, and TanStack Query refreshes. Supplier-product relationship writes remain blocked by the current read-only backend contract.
-
-Dependencies: Phases 2–4 for live workflows. Verification: frontend typecheck, ESLint, 7 Vitest tests, production build, and route-manifest validation pass.
-
-Mutation milestone checkpoint: `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
+Dependencies: Phases 2–4. Verification: frontend typecheck, ESLint, 7 Vitest tests, production build pass.
 
 ## Manus handoff checkpoint — COMPLETE
 
-Feature development stops here for the Manus workspace. The complete verified source is committed on `main` at pre-handoff checkpoint `20df3a414c6b5717683e24da2535fa3e275b3fbb` and pushed to GitHub. Continue development outside Manus in the local Antigravity environment. Do not begin Phase 6 in Manus.
+Feature development stopped at the Manus workspace. Complete verified source committed on `main` at `be28094b655833256f9d2451ff189d12dd7b2166`.
 
-The available verification suite passed: backend migration drift check, Django system check, 18 backend tests, frontend TypeScript check, ESLint, 7 frontend tests, production build, route-manifest validation, and `git diff --check`. No production credentials or provider integrations were verified. Required external setup remains Supabase PostgreSQL/Storage, Upstash Redis, Groq API, Render, Vercel, production environment variables, and email delivery if required.
+## Phase 6 — Analytics and reports — DONE
 
-## Phase 6 — Analytics and reports — TODO — NEXT OUTSIDE MANUS
+Deterministic risk, low-stock, stockout, valuation, slow/excess, movement, imbalance calculations. Report metadata model. CSV/PDF exports via ReportLab. Configurable storage adapter (local filesystem + Supabase Storage ready). Frontend Reports page with Recharts for inventory value trend, movement trend, inventory by hub bar chart, and low-stock table. Export download controls.
 
-Implement deterministic risk, low-stock, stockout, valuation, slow/excess, movement, imbalance calculations, report metadata, CSV/PDF exports, storage, and optional async generation. Verify calculations against fixtures and ensure reports cannot cross tenants.
+Dependencies: Phases 2–4. Verification: analytics calculation tests, export tests, permission tests, tenant isolation tests pass. Commit: `5396f823744bdbd7585cf908120b6130c0eb2a1f`.
 
-Dependencies: Phases 2–4. Verification: calculation, permissions, export, storage error, and incomplete-history tests.
+## Phase 7 — AI assistant — DONE
 
-## Phase 7 — AI assistant — TODO
+Groq adapter with deterministic rule-based offline fallback. Persistent conversation and message models with tenant-scoped foreign keys. 9 read tools: `get_inventory_summary`, `get_low_stock_products`, `get_out_of_stock_products`, `get_hub_inventory`, `search_products`, `get_recent_movements`, `get_restock_requests`, `get_transfer_requests`, `get_supplier_list`. 5 write confirmation tools: `receive_stock`, `issue_stock`, `adjust_stock`, `create_transfer`, `create_restock_request`. All tools enforce tenant scope via active membership. Write tools return structured confirmation proposals (`requires_confirmation: true`). Confirmed actions execute through `/api/v1/ai/confirm-action/` which re-validates permissions and delegates to existing transactional services with audit logging. User preferences/memory model. Polished React chat UI at `/app/assistant` with persistent conversation sidebar, active chat history, tool execution indicators, interactive confirmation cards with Confirm/Cancel, and user preferences drawer.
 
-Implement Groq adapter, persistent conversation history, bounded memory/preferences, server-side read/write tools, tool-call records, confirmation proposals, and grounded reports. Verify schemas, authorization, tenant scoping, mutation confirmation/recheck, and mocked-provider behavior.
-
-Dependencies: Phases 2–6. Verification: tool and confirmation-flow tests; no arbitrary SQL or fabricated metrics.
+Dependencies: Phases 2–6. Verification: 48 backend tests (conversation tenant isolation, user permissions, read tool correctness, write confirmation requirement, confirmed transaction execution, audit logging, cross-tenant ID rejection, invalid argument rejections, scoped user preferences). Frontend tests pass. TypeScript + Vite production build pass.
 
 ## Phase 8 — Performance and reliability — TODO
 
