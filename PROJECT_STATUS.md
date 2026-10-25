@@ -26,7 +26,7 @@ The core inventory domain includes organization-scoped categories, products with
 
 Operational workflows now include restock requests (`draft → pending → approved → ordered → received`, with cancellation before receipt) and inter-hub transfers (`draft → pending → approved → dispatched → received`, with cancellation before dispatch). Transfer dispatch applies an idempotent source `transfer_out`; receipt applies an idempotent destination `transfer_in`; restock receipt applies an idempotent `receipt`. State transitions are row-locked and auditable.
 
-The frontend landing page and responsive shell remain available with honest empty states for the domain screens. A typed API client now persists JWT tokens, refreshes access tokens on 401, supports registration/login/logout, and queries the organization-scoped dashboard summary. Overview renders sign-in, loading, error, and live metric states instead of fabricated KPI values. Inventory, Hubs, Restock, and Transfers render sign-in/loading/error/empty/table states against their real list endpoints, with unavailable create buttons labeled as next. The local Django API responds healthy on `/api/v1/health/` and serves OpenAPI YAML on `/api/v1/schema/`. CI, environment, deployment, security, architecture, plan, TODO, decisions, and resume documents are present.
+The frontend landing page and responsive shell remain available with honest empty states for the domain screens. The sidebar workspace switcher now loads the authenticated user’s active organization and can switch only among memberships. A typed API client now persists JWT tokens, refreshes access tokens on 401, supports registration/login/logout, and queries the organization-scoped dashboard summary. Overview renders sign-in, loading, error, and live metric states instead of fabricated KPI values. Inventory, Hubs, Restock, and Transfers render sign-in/loading/error/empty/table states against their real list endpoints, with unavailable create buttons labeled as next. The local Django API responds healthy on `/api/v1/health/` and serves OpenAPI YAML on `/api/v1/schema/`. CI, environment, deployment, security, architecture, plan, TODO, decisions, and resume documents are present.
 
 ## Tests actually run
 
@@ -44,6 +44,7 @@ The frontend landing page and responsive shell remain available with honest empt
 - Phase 4 workflow milestone commit: `bac38eebaa081493957a9df350282e5a0abec204`.
 - Frontend auth/live metrics commit: `841afcc2d058f1ec90177b657f40883406602cc8`.
 - Frontend live resource lists commit: `a62f6e4b8ac192c720ccbed66f4d297eec82ac37`.
+- Organization workspace switcher commit: `4acdd0456822c104badf06620937149aca9f33b9`.
 - Active organization switch commit: `ae85d4c33a6a26bbde7af6a2146bee58d7783f89`.
 - This status update will be recorded in the next documentation checkpoint.
 - The requested GitHub repository is empty; the canonical-transfer confirmation was declined. The managed repository remains canonical, and no plain GitHub push was attempted.
