@@ -18,7 +18,7 @@ The database is authoritative. Every consequential stock quantity change is tran
 
 ## Current implementation
 
-Phase 0 planning is in progress. The project directory is initialized and the foundation is the next implementation milestone. Features are not complete until the status and handoff documents contain evidence from actual checks.
+The repository is restored from checkpoint `825afde` and is in active Phase 5 frontend development. The backend foundation, tenant-scoped inventory/workflows, and organization administration milestone are implemented and verified; the current 15-test backend suite covers invitation lifecycle, role enforcement, member removal, audit behavior, and tenant isolation. Frontend mutation forms, reports, AI, and external service adapters remain in progress. Features are not complete until the status and handoff documents contain evidence from actual checks.
 
 ## Local commands
 

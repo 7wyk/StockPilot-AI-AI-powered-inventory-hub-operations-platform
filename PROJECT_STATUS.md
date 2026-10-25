@@ -6,7 +6,7 @@ Phase 5 — Frontend application, in progress.
 ## Phase status
 - Phase 0 — `DONE`: repository inspection, design, continuity documents.
 - Phase 1 — `DONE`: monorepo foundation, Django health/OpenAPI, responsive Vite shell, CI, and first checks.
-- Phase 2 — `IN_PROGRESS`: organization, membership, role, profile, audit models and migrations; JWT registration/login/refresh/logout/me; tenant-scoped organization listing; identity/tenant tests; and active organization switching restricted to the authenticated user’s memberships. Password recovery, invitation/team administration, and full role matrix enforcement remain.
+- Phase 2 — `IN_PROGRESS`: organization, membership, role, profile, audit models and migrations; JWT registration/login/refresh/logout/me; tenant-scoped organization listing; active organization switching; invitation/member administration; and an explicit server-authoritative role matrix. Password recovery, auth rate limiting, and broader endpoint permission coverage remain.
 - Phase 3 — `IN_PROGRESS`: categories, products, hubs, suppliers, balances, immutable stock movements, tenant-scoped APIs, dashboard summary, idempotent transactional receipt/issue/adjustment service, and inventory tests are implemented. Supplier workflows, richer filters, and frontend data wiring remain.
 - Phase 4 — `IN_PROGRESS`: restock request and inter-hub transfer state machines are implemented with permission gates, membership checks, availability validation, idempotent stock effects, movement/audit records, migrations, and lifecycle tests. More granular role policy, cancellation/refund semantics, and frontend wiring remain.
 - Phase 5 — `IN_PROGRESS`: public landing page, responsive shell, login/registration form, typed auth client, refresh/logout handling, route manifest, and Overview live dashboard summary query are implemented. Inventory/Hub/Restock/Transfer route data lists are now wired to the tenant-scoped API; create/mutation forms remain intentionally disabled until their confirmation UI is connected.
@@ -20,7 +20,7 @@ Phase 5 — Frontend application, in progress.
 
 The managed Webdev project is at `/home/ubuntu/stockpilot` with server/database capabilities enabled and Preview runtime port 3000. The root pnpm workspace has a reviewed `allowBuilds` policy for esbuild and one lockfile.
 
-The backend includes organization, membership, invitation, profile, and audit models; JWT access/refresh configuration with blacklist support; transactional registration; email-compatible login; refresh, logout, and current-user endpoints; and tenant-scoped organization listing.
+The backend includes organization, membership, invitation, profile, and audit models; JWT access/refresh configuration with blacklist support; transactional registration; email-compatible login; refresh, logout, and current-user endpoints; tenant-scoped organization listing; and a server-authoritative role permission matrix. Organization administration supports member listing, role changes, member removal, invitation creation/status/cancellation/resend, secure tokenized acceptance, membership reactivation, and audit events for invitation and membership actions. Owner transfer remains intentionally out of scope for this milestone.
 
 The core inventory domain includes organization-scoped categories, products with SKU/pricing/reorder fields, hubs, suppliers and supplier-product links, product/hub balances, immutable signed stock movements, query-scoped API viewsets, dashboard metrics, idempotency keys, row locking, negative-stock protection, available-stock validation, and audit events for stock changes.
 
@@ -33,6 +33,7 @@ The frontend landing page and responsive shell remain available with honest empt
 - Foundation backend: Django check and health test passed.
 - Foundation frontend: typecheck, lint, 2 Vitest tests, production build, route manifest, and landing HTML response passed.
 - Phase 2 + 3 + 4 backend: migration drift checks reported no changes; `cd backend && ../.venv/bin/pytest -q -rs` passed 11 tests; Django check passed.
+- Organization administration milestone: migration drift check, Django check, and `cd backend && ../.venv/bin/pytest -q -rs` passed 15 tests, including invitation lifecycle, role enforcement, member removal, audit behavior, and tenant isolation.
 - Frontend integration: typecheck, lint, 3 Vitest tests, and production build passed; `/manus-routes.json` includes `/login` and the local API health endpoint returned `{ "status": "ok", "database": "ok" }`.
 
 ## Git state
@@ -47,12 +48,12 @@ The frontend landing page and responsive shell remain available with honest empt
 - Organization workspace switcher commit: `4acdd0456822c104badf06620937149aca9f33b9`.
 - Active organization switch commit: `ae85d4c33a6a26bbde7af6a2146bee58d7783f89`.
 - This status update will be recorded in the next documentation checkpoint.
-- The requested GitHub repository is empty; the canonical-transfer confirmation was declined. The managed repository remains canonical, and no plain GitHub push was attempted.
+- The requested GitHub repository was reconnected and restored at checkpoint `825afde`; this workspace is now tracking its `main` branch.
 
 ## Known bugs and limitations
 
-Password recovery, invitation/team administration, organization switching, full role matrix enforcement, supplier procurement flows, frontend data wiring for Products/Hubs/Transfers/Restock, reports, AI, and external service adapters are not complete. The host-provided `DATABASE_URL` is MySQL; unsupported non-PostgreSQL DSNs intentionally fall back to SQLite for local checks, while production documentation targets Supabase PostgreSQL. No production credentials or live deployment are configured or verified.
+Password recovery, authentication rate limiting, owner transfer, richer role enforcement across every domain endpoint, supplier procurement flows, frontend team administration and mutation forms, reports, AI, and external service adapters are not complete. The host-provided `DATABASE_URL` is MySQL; unsupported non-PostgreSQL DSNs intentionally fall back to SQLite for local checks, while production documentation targets Supabase PostgreSQL. No production credentials or live deployment are configured or verified.
 
 ## Exact next task
 
-Finish the remaining Phase 2 authorization surface and continue frontend data wiring: invitation/membership administration, explicit role permission tests, auth rate limiting, and confirmation-driven create/mutation forms for products, hubs, restock requests, and transfers. Keep all unavailable actions clearly labeled rather than silently mutating.
+Finish the remaining Phase 2 authorization surface with authentication rate limiting and broader endpoint permission coverage, then add frontend team administration and confirmation-driven create/mutation forms for products, hubs, restock requests, and transfers. Keep all unavailable actions clearly labeled rather than silently mutating.

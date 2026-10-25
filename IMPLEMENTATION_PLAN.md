@@ -12,7 +12,7 @@ The repository contains a frontend/backend monorepo, environment examples, pnpm 
 
 ## Phase 2 — Database and identity — IN_PROGRESS
 
-Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; and identity/tenant tests. Remaining: password recovery/reset, invitations and membership administration, explicit role permission endpoints/tests, authentication/sensitive-endpoint rate limiting, and broader audit coverage.
+Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; member and invitation administration; secure invitation acceptance; membership audit events; an explicit role-permission matrix endpoint; and identity/tenant tests. Remaining: password recovery/reset, authentication/sensitive-endpoint rate limiting, broader endpoint permission coverage, and owner-transfer policy.
 
 Dependencies: Phase 1. Verification so far: 4 backend tests pass.
 
@@ -34,7 +34,7 @@ Dependencies: Phases 2–3. Verification: lifecycle, insufficient-stock, idempot
 
 ## Phase 5 — Frontend application — IN_PROGRESS
 
-The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, and a live Overview summary query. Inventory, Hubs, Restock, and Transfers now query their tenant-scoped list endpoints and render live loading/error/empty/table states. Next add confirmation-driven create/mutation forms; until then, route actions are clearly disabled rather than silently no-op.
+The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, and a live Overview summary query. Inventory, Hubs, Restock, and Transfers now query their tenant-scoped list endpoints and render live loading/error/empty/table states. Next add permission-aware team administration and confirmation-driven create/mutation forms; until then, route actions are clearly disabled rather than silently no-op.
 
 Dependencies: Phases 2–4 for live workflows. Verification: frontend component/page/action tests and a responsive route audit.
 
