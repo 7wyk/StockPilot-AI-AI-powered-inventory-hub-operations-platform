@@ -37,3 +37,11 @@ class HasOrganizationRole(BasePermission):
 
 class CanManageOrganization(HasOrganizationRole):
     allowed_roles = frozenset({Membership.Role.OWNER, Membership.Role.ADMIN})
+
+
+class CanEditInventory(HasOrganizationRole):
+    allowed_roles = frozenset({Membership.Role.OWNER, Membership.Role.ADMIN, Membership.Role.INVENTORY_MANAGER})
+
+
+class CanOperateHub(HasOrganizationRole):
+    allowed_roles = frozenset({Membership.Role.OWNER, Membership.Role.ADMIN, Membership.Role.INVENTORY_MANAGER, Membership.Role.HUB_OPERATOR})

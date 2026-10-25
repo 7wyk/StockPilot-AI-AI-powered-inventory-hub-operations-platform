@@ -1,0 +1,1 @@
+Stock movement records are immutable audit facts created by the inventory service. Direct writes to movement rows are intentionally not exposed through the API; use `apps.inventory.services.change_stock()` so balance locking, idempotency, business-rule validation, and audit logging remain in one transaction.
