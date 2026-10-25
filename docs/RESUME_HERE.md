@@ -15,11 +15,11 @@ Read `README.md`, `PROJECT_STATUS.md`, `IMPLEMENTATION_PLAN.md`, and `ARCHITECTU
 
 The backend serves health and OpenAPI routes. Identity models and migrations exist for organizations, memberships, invitations, profiles, and audit events. Registration transactionally creates an owner organization, JWT email-compatible login returns access/refresh tokens, refresh/logout/me routes exist, token blacklist support is installed, and organization listing is tenant-scoped.
 
-The core inventory backend has categories, products, hubs, suppliers, supplier-product links, product/hub balances, immutable signed stock movements, tenant-scoped APIs, dashboard summary metrics, idempotent stock receipt/issue/adjustment operations, row locking, negative/available-stock protections, and audit records. Restock and transfer APIs implement row-locked lifecycle transitions with permission gates and idempotent movement effects. Ten backend tests pass. The frontend has the polished landing page and responsive shell with route manifest and empty states; its typecheck, lint, two tests, and production build pass.
+The core inventory backend has categories, products, hubs, suppliers, supplier-product links, product/hub balances, immutable signed stock movements, tenant-scoped APIs, dashboard summary metrics, idempotent stock receipt/issue/adjustment operations, row locking, negative/available-stock protections, and audit records. Restock and transfer APIs implement row-locked lifecycle transitions with permission gates and idempotent movement effects. Ten backend tests pass. The frontend has the polished landing page and responsive shell with route manifest and empty states. A typed API client supports JWT persistence, refresh, registration/login/logout, and the Overview dashboard query; its typecheck, lint, three tests, and production build pass. The local API health endpoint is verified.
 
 ## Exact next task
 
-Finish remaining Phase 2 authorization work: profile-selected organization switching, invitations/membership administration, explicit role permission tests, and authentication rate limiting. Then build a small authenticated frontend API client and connect Overview, Products, Hubs, Transfers, and Restock screens to live endpoints with clear loading, error, empty, and confirmation states.
+Finish remaining Phase 2 authorization work: profile-selected organization switching, invitations/membership administration, explicit role permission tests, and authentication rate limiting. Then connect Products, Hubs, Transfers, and Restock screens to live endpoints with clear loading, error, empty, and confirmation states.
 
 ## Commands/checks
 

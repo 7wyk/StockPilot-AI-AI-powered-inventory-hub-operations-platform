@@ -34,7 +34,7 @@ Dependencies: Phases 2–3. Verification: lifecycle, insufficient-stock, idempot
 
 ## Phase 5 — Frontend application — IN_PROGRESS
 
-The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, and responsive behavior. Next implement an authenticated API client and connect Overview, Products, Hubs, Transfers, and Restock screens with loading/error/empty/confirmation states.
+The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, and a live Overview summary query. Next connect Products, Hubs, Transfers, and Restock screens with loading/error/empty/confirmation states. Keep route actions either functional or clearly unavailable.
 
 Dependencies: Phases 2–4 for live workflows. Verification: frontend component/page/action tests and a responsive route audit.
 
