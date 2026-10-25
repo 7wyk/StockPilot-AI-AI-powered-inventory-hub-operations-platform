@@ -1,6 +1,6 @@
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 
-from apps.organizations.permissions import CanEditInventory, HasOrganizationMembership, get_active_membership
+from apps.organizations.permissions import OrganizationPermission, get_active_membership, organization_permission_class
 
 from .models import Hub
 from .serializers import HubSerializer
@@ -8,7 +8,6 @@ from .serializers import HubSerializer
 
 class HubViewSet(viewsets.ModelViewSet):
     serializer_class = HubSerializer
-    permission_classes = [HasOrganizationMembership]
 
     def get_queryset(self):
         membership = get_active_membership(self.request.user)
@@ -18,4 +17,6 @@ class HubViewSet(viewsets.ModelViewSet):
         serializer.save(organization=get_active_membership(self.request.user).organization)
 
     def get_permissions(self):
-        return [CanEditInventory() if self.request.method not in permissions.SAFE_METHODS else HasOrganizationMembership()]
+        if self.action in {"list", "retrieve"}:
+            return [organization_permission_class(OrganizationPermission.VIEW_HUB_INVENTORY)()]
+        return [organization_permission_class(OrganizationPermission.MANAGE_HUBS)()]

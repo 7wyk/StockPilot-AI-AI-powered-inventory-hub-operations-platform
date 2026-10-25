@@ -5,6 +5,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from .throttles import AuthenticationRateThrottle, SensitiveEndpointRateThrottle
 from .serializers import (
     RegistrationSerializer,
     StockPilotTokenObtainPairSerializer,
@@ -14,6 +15,7 @@ from .serializers import (
 
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
+    throttle_classes = [AuthenticationRateThrottle]
 
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
@@ -24,14 +26,17 @@ class RegisterView(APIView):
 
 class LoginView(TokenObtainPairView):
     serializer_class = StockPilotTokenObtainPairSerializer
+    throttle_classes = [AuthenticationRateThrottle]
 
 
 class RefreshView(TokenRefreshView):
     permission_classes = [permissions.AllowAny]
+    throttle_classes = [AuthenticationRateThrottle]
 
 
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    throttle_classes = [SensitiveEndpointRateThrottle]
 
     def post(self, request):
         raw_token = request.data.get("refresh")

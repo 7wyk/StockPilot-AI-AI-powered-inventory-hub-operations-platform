@@ -92,6 +92,10 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_THROTTLE_RATES": {
+        "authentication": os.getenv("AUTH_RATE_LIMIT", "10/minute"),
+        "sensitive": os.getenv("SENSITIVE_RATE_LIMIT", "60/minute"),
+    },
 }
 SPECTACULAR_SETTINGS = {
     "TITLE": "StockPilot AI API",
@@ -106,6 +110,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 JWT_ACCESS_MINUTES = int(os.getenv("JWT_ACCESS_MINUTES", "15"))
 JWT_REFRESH_DAYS = int(os.getenv("JWT_REFRESH_DAYS", "7"))
+AUTH_RATE_LIMIT = os.getenv("AUTH_RATE_LIMIT", "10/minute")
+SENSITIVE_RATE_LIMIT = os.getenv("SENSITIVE_RATE_LIMIT", "60/minute")
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=JWT_ACCESS_MINUTES),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=JWT_REFRESH_DAYS),

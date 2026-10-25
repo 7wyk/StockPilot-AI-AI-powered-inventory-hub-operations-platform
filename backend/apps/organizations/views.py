@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 
 from apps.accounts.models import UserProfile
 from apps.audit.services import record_audit
+from apps.accounts.throttles import SensitiveEndpointRateThrottle
 
 from .models import Membership, Organization, OrganizationInvite
 from .permissions import (
@@ -245,6 +246,7 @@ class InvitationDetailView(APIView):
 
 class InvitationAcceptView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    throttle_classes = [SensitiveEndpointRateThrottle]
 
     @transaction.atomic
     def post(self, request):

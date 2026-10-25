@@ -2,7 +2,7 @@ from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.organizations.permissions import CanEditInventory, CanOperateHub, HasOrganizationMembership, get_active_membership
+from apps.organizations.permissions import OrganizationPermission, get_active_membership, organization_permission_class
 
 from .models import Transfer
 from .serializers import TransferSerializer
@@ -11,8 +11,6 @@ from .services import TransferStateError, transition_transfer
 
 class TransferViewSet(viewsets.ModelViewSet):
     serializer_class = TransferSerializer
-    permission_classes = [HasOrganizationMembership]
-
     def get_queryset(self):
         membership = get_active_membership(self.request.user)
         return Transfer.objects.filter(organization=membership.organization).select_related("product", "source_hub", "destination_hub", "requested_by", "approved_by", "dispatched_by", "received_by") if membership else Transfer.objects.none()
@@ -27,9 +25,20 @@ class TransferViewSet(viewsets.ModelViewSet):
         serializer.save(organization=membership.organization, requested_by=self.request.user)
 
     def get_permissions(self):
-        if self.action in {"approve"}:
-            return [CanEditInventory()]
-        return [CanOperateHub() if self.action in {"create", "submit", "dispatch_transfer", "receive"} else HasOrganizationMembership()]
+        permissions_by_action = {
+            "list": OrganizationPermission.VIEW_HUB_INVENTORY,
+            "retrieve": OrganizationPermission.VIEW_HUB_INVENTORY,
+            "create": OrganizationPermission.INITIATE_TRANSFERS,
+            "submit": OrganizationPermission.INITIATE_TRANSFERS,
+            "approve": OrganizationPermission.APPROVE_TRANSFERS,
+            "dispatch_transfer": OrganizationPermission.DISPATCH_TRANSFERS,
+            "receive": OrganizationPermission.RECEIVE_TRANSFERS,
+            "cancel": OrganizationPermission.INITIATE_TRANSFERS,
+            "update": OrganizationPermission.INITIATE_TRANSFERS,
+            "partial_update": OrganizationPermission.INITIATE_TRANSFERS,
+            "destroy": OrganizationPermission.INITIATE_TRANSFERS,
+        }
+        return [organization_permission_class(permissions_by_action.get(self.action, OrganizationPermission.VIEW_HUB_INVENTORY))()]
 
     def _transition(self, request, pk, action):
         try:

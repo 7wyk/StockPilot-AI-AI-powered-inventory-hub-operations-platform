@@ -2,7 +2,7 @@ from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.organizations.permissions import CanEditInventory, CanOperateHub, HasOrganizationMembership, get_active_membership
+from apps.organizations.permissions import OrganizationPermission, get_active_membership, organization_permission_class
 
 from .models import RestockRequest
 from .serializers import RestockRequestSerializer
@@ -11,8 +11,6 @@ from .services import RestockStateError, transition_restock
 
 class RestockRequestViewSet(viewsets.ModelViewSet):
     serializer_class = RestockRequestSerializer
-    permission_classes = [HasOrganizationMembership]
-
     def get_queryset(self):
         membership = get_active_membership(self.request.user)
         return RestockRequest.objects.filter(organization=membership.organization).select_related("product", "supplier", "hub", "requested_by", "approved_by") if membership else RestockRequest.objects.none()
@@ -27,9 +25,20 @@ class RestockRequestViewSet(viewsets.ModelViewSet):
         serializer.save(organization=membership.organization, requested_by=self.request.user)
 
     def get_permissions(self):
-        if self.action in {"approve", "order"}:
-            return [CanEditInventory()]
-        return [CanOperateHub() if self.action in {"create", "submit", "receive"} else HasOrganizationMembership()]
+        permissions_by_action = {
+            "list": OrganizationPermission.VIEW_RESTOCK,
+            "retrieve": OrganizationPermission.VIEW_RESTOCK,
+            "create": OrganizationPermission.CREATE_RESTOCK,
+            "submit": OrganizationPermission.CREATE_RESTOCK,
+            "approve": OrganizationPermission.APPROVE_RESTOCK,
+            "order": OrganizationPermission.APPROVE_RESTOCK,
+            "receive": OrganizationPermission.ADJUST_STOCK,
+            "cancel": OrganizationPermission.CREATE_RESTOCK,
+            "update": OrganizationPermission.CREATE_RESTOCK,
+            "partial_update": OrganizationPermission.CREATE_RESTOCK,
+            "destroy": OrganizationPermission.CREATE_RESTOCK,
+        }
+        return [organization_permission_class(permissions_by_action.get(self.action, OrganizationPermission.VIEW_RESTOCK))()]
 
     def _transition(self, request, pk, action):
         try:

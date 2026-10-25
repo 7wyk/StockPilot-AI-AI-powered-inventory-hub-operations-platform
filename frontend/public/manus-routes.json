@@ -9,6 +9,7 @@
     { "path": "/app/transfers", "title": "Transfers" },
     { "path": "/app/reports", "title": "Reports" },
     { "path": "/app/assistant", "title": "AI Assistant" },
+    { "path": "/app/team", "title": "Team" },
     { "path": "/app/settings", "title": "Settings" }
   ]
 }

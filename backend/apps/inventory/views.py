@@ -2,12 +2,16 @@ from decimal import Decimal
 
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
-from rest_framework import permissions, serializers, status, viewsets
+from rest_framework import serializers, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.hubs.models import Hub
-from apps.organizations.permissions import CanEditInventory, CanOperateHub, HasOrganizationMembership, get_active_membership
+from apps.organizations.permissions import (
+    OrganizationPermission,
+    get_active_membership,
+    organization_permission_class,
+)
 
 from .dashboard_serializers import DashboardSummarySerializer
 from .models import Category, InventoryBalance, Product
@@ -15,9 +19,12 @@ from .serializers import CategorySerializer, ProductSerializer, StockMutationSer
 from .services import InventoryOperationError, change_stock
 
 
+def _permission(permission):
+    return organization_permission_class(permission)()
+
+
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
-    permission_classes = [HasOrganizationMembership]
 
     def get_queryset(self):
         membership = get_active_membership(self.request.user)
@@ -27,12 +34,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
         serializer.save(organization=get_active_membership(self.request.user).organization)
 
     def get_permissions(self):
-        return [CanEditInventory() if self.request.method not in permissions.SAFE_METHODS else HasOrganizationMembership()]
+        if self.action == "list" or self.action == "retrieve":
+            return [_permission(OrganizationPermission.VIEW_INVENTORY)]
+        if self.action == "create":
+            return [_permission(OrganizationPermission.CREATE_PRODUCTS)]
+        if self.action in {"update", "partial_update"}:
+            return [_permission(OrganizationPermission.EDIT_PRODUCTS)]
+        return [_permission(OrganizationPermission.ARCHIVE_PRODUCTS)]
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    permission_classes = [HasOrganizationMembership]
 
     def get_queryset(self):
         membership = get_active_membership(self.request.user)
@@ -50,11 +62,17 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.save(organization=membership.organization)
 
     def get_permissions(self):
-        return [CanEditInventory() if self.request.method not in permissions.SAFE_METHODS else HasOrganizationMembership()]
+        if self.action in {"list", "retrieve"}:
+            return [_permission(OrganizationPermission.VIEW_INVENTORY)]
+        if self.action == "create":
+            return [_permission(OrganizationPermission.CREATE_PRODUCTS)]
+        if self.action in {"update", "partial_update"}:
+            return [_permission(OrganizationPermission.EDIT_PRODUCTS)]
+        return [_permission(OrganizationPermission.ARCHIVE_PRODUCTS)]
 
 
 class ProductStockView(APIView):
-    permission_classes = [CanOperateHub]
+    permission_classes = [organization_permission_class(OrganizationPermission.ADJUST_STOCK)]
 
     def post(self, request, pk):
         membership = get_active_membership(request.user)
@@ -83,7 +101,7 @@ class ProductStockView(APIView):
 
 
 class DashboardSummaryView(APIView):
-    permission_classes = [HasOrganizationMembership]
+    permission_classes = [organization_permission_class(OrganizationPermission.VIEW_INVENTORY)]
 
     def get(self, request):
         organization = get_active_membership(request.user).organization

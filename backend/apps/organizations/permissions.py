@@ -113,6 +113,14 @@ def has_organization_permission(membership, permission):
     return bool(membership and permission in ROLE_PERMISSIONS.get(membership.role, frozenset()))
 
 
+def organization_permission_class(permission):
+    return type(
+        "OrganizationPermission_" + permission.replace(".", "_"),
+        (HasOrganizationPermission,),
+        {"required_permission": permission},
+    )
+
+
 class HasOrganizationMembership(BasePermission):
     message = "An active organization membership is required."
 
