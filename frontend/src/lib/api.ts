@@ -32,6 +32,11 @@ export type DashboardSummary = {
   data_status: 'empty' | 'live'
 }
 
+export type ProductRecord = { id: number; name: string; sku: string; cost_price: string; unit_of_measure: string; is_active: boolean; balances: Array<{ product_name: string; hub_name: string; on_hand: string; available: string }> }
+export type HubRecord = { id: number; name: string; code: string; city: string; is_active: boolean }
+export type TransferRecord = { id: number; product_name: string; source_hub_name: string; destination_hub_name: string; quantity: string; status: string; created_at: string }
+export type RestockRecord = { id: number; product_name: string; hub_name: string; supplier_name: string | null; quantity: string; status: string; created_at: string }
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ACCESS_KEY = 'stockpilot.access'
 const REFRESH_KEY = 'stockpilot.refresh'
@@ -85,6 +90,10 @@ export const api = {
   register: (payload: { email: string; password: string; first_name: string; organization_name: string }) => request<{ user: UserIdentity }>('/auth/register/', { method: 'POST', body: JSON.stringify(payload) }, false),
   me: () => request<UserIdentity>('/auth/me/'),
   dashboard: () => request<DashboardSummary>('/dashboard/summary/'),
+  products: () => request<ProductRecord[]>('/products/'),
+  hubs: () => request<HubRecord[]>('/hubs/'),
+  transfers: () => request<TransferRecord[]>('/transfers/'),
+  restocks: () => request<RestockRecord[]>('/restock-requests/'),
   organizations: () => request<Organization[]>('/organizations/'),
   logout: async () => {
     const refresh = window.localStorage.getItem(REFRESH_KEY)
