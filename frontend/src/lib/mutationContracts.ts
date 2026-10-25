@@ -1,0 +1,14 @@
+import { z } from 'zod'
+
+export type Mode = 'products' | 'categories' | 'hubs' | 'suppliers' | 'restocks' | 'transfers'
+
+export const productSchema = z.object({ name: z.string().trim().min(2, 'Name must be at least 2 characters.'), sku: z.string().trim().min(2, 'SKU is required.'), category: z.string().optional(), unit_of_measure: z.string().trim().min(1, 'Unit is required.'), cost_price: z.coerce.number().min(0, 'Cost cannot be negative.'), selling_price: z.coerce.number().min(0).optional(), reorder_threshold: z.coerce.number().min(0), target_stock_level: z.coerce.number().min(0) })
+export const categorySchema = z.object({ name: z.string().trim().min(2, 'Name is required.'), slug: z.string().trim().min(2, 'Slug is required.'), description: z.string().optional() })
+export const hubSchema = z.object({ name: z.string().trim().min(2, 'Name is required.'), code: z.string().trim().min(2, 'Code is required.'), city: z.string().optional(), address: z.string().optional() })
+export const supplierSchema = z.object({ name: z.string().trim().min(2, 'Name is required.'), email: z.string().email('Enter a valid email.').or(z.literal('')), phone: z.string().optional(), website: z.string().url('Enter a valid URL.').or(z.literal('')), notes: z.string().optional() })
+export const restockSchema = z.object({ product: z.coerce.number().positive(), hub: z.coerce.number().positive(), supplier: z.coerce.number().optional(), quantity: z.coerce.number().positive('Quantity must be greater than zero.'), notes: z.string().optional(), external_reference: z.string().optional() })
+export const transferSchema = z.object({ product: z.coerce.number().positive(), source_hub: z.coerce.number().positive(), destination_hub: z.coerce.number().positive(), quantity: z.coerce.number().positive('Quantity must be greater than zero.'), notes: z.string().optional() }).refine((value) => value.source_hub !== value.destination_hub, { path: ['destination_hub'], message: 'Destination must differ from source.' })
+export const stockSchema = z.object({ hub_id: z.coerce.number().positive(), movement_type: z.enum(['receipt', 'issue', 'adjustment']), quantity: z.coerce.number().positive('Quantity must be greater than zero.'), reason: z.string().trim().min(3, 'Explain the reason for this movement.'), idempotency_key: z.string().min(8) })
+
+export const permissionByMode: Record<Mode, string> = { products: 'inventory.products.create', categories: 'inventory.products.create', hubs: 'hubs.manage', suppliers: 'suppliers.manage', restocks: 'restock.create', transfers: 'transfers.initiate' }
+export const editPermissionByMode: Record<Mode, string> = { products: 'inventory.products.edit', categories: 'inventory.products.edit', hubs: 'hubs.manage', suppliers: 'suppliers.manage', restocks: 'restock.create', transfers: 'transfers.initiate' }

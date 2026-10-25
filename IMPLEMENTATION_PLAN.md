@@ -34,9 +34,9 @@ Dependencies: Phases 2–3. Verification: lifecycle, insufficient-stock, idempot
 
 ## Phase 5 — Frontend application — IN_PROGRESS
 
-The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, a live Overview summary query, and a permission-aware Team page wired to member/invitation/permission APIs. Inventory, Hubs, Restock, and Transfers now query their tenant-scoped list endpoints and render live loading/error/empty/table states. Next add confirmation-driven create/mutation forms; until then, route actions are clearly disabled rather than silently no-op.
+The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, responsive behavior, login/registration UI, typed JWT API client with refresh/logout handling, a live Overview summary query, and a permission-aware Team page wired to member/invitation/permission APIs. Inventory, Categories, Hubs, Suppliers, Restock, and Transfers now have confirmation-driven React Hook Form + Zod mutations backed by typed Django APIs, permission-aware controls, state-machine transition visibility, backend error feedback, and TanStack Query refreshes. Supplier-product relationship writes remain blocked by the current read-only backend contract.
 
-Dependencies: Phases 2–4 for live workflows. Verification: frontend component/page/action tests and a responsive route audit.
+Dependencies: Phases 2–4 for live workflows. Verification: frontend typecheck, ESLint, 7 Vitest tests, production build, and route-manifest validation pass.
 
 ## Phase 6 — Analytics and reports — TODO
 
