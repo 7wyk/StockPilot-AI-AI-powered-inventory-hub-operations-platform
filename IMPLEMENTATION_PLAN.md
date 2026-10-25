@@ -38,6 +38,8 @@ The public landing page and responsive workspace shell are implemented with poli
 
 Dependencies: Phases 2–4 for live workflows. Verification: frontend typecheck, ESLint, 7 Vitest tests, production build, and route-manifest validation pass.
 
+Mutation milestone checkpoint: `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
+
 ## Phase 6 — Analytics and reports — TODO
 
 Implement deterministic risk, low-stock, stockout, valuation, slow/excess, movement, imbalance calculations, report metadata, CSV/PDF exports, storage, and optional async generation. Verify calculations against fixtures and ensure reports cannot cross tenants.

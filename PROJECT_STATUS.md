@@ -37,6 +37,7 @@ The frontend landing page and responsive shell remain available with honest empt
 - Authorization hardening milestone: Django check and `cd backend && ../.venv/bin/pytest -q -rs` passed 18 tests, including IP-based registration throttling, action-level role enforcement, known-ID object isolation, invitation lifecycle, and tenant isolation.
 - Team administration milestone: frontend typecheck, lint, 3 Vitest tests, and production build passed; `/app/team` is included in `frontend/public/manus-routes.json`.
 - Confirmation-driven mutation milestone: backend migration drift check, Django check, and 18 backend tests passed; frontend typecheck, ESLint, 7 Vitest tests, production build, and route-manifest validation passed.
+- Latest mutation milestone commit: `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
 - Frontend integration: typecheck, lint, 3 Vitest tests, and production build passed; `/manus-routes.json` includes `/login` and the local API health endpoint returned `{ "status": "ok", "database": "ok" }`.
 
 ## Git state
