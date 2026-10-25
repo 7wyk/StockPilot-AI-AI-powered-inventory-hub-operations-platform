@@ -1,0 +1,12 @@
+{
+  "routes": [
+    { "path": "/", "title": "StockPilot AI" },
+    { "path": "/app", "title": "Overview" },
+    { "path": "/app/inventory", "title": "Inventory" },
+    { "path": "/app/hubs", "title": "Hubs" },
+    { "path": "/app/transfers", "title": "Transfers" },
+    { "path": "/app/reports", "title": "Reports" },
+    { "path": "/app/assistant", "title": "AI Assistant" },
+    { "path": "/app/settings", "title": "Settings" }
+  ]
+}
