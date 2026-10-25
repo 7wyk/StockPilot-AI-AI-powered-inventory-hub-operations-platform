@@ -12,7 +12,7 @@ The repository contains a frontend/backend monorepo, environment examples, pnpm 
 
 ## Phase 2 — Database and identity — IN_PROGRESS
 
-Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; and identity/tenant tests. Remaining: password recovery/reset, organization switching, invitations and membership administration, explicit role permission endpoints/tests, authentication/sensitive-endpoint rate limiting, and broader audit coverage.
+Implemented so far: organization, membership, invitation, profile, and audit models with Django migrations; JWT registration/login/refresh/logout/me; refresh-token blacklist support; email-compatible login; tenant-scoped organization listing; active-membership resolver; and identity/tenant tests. Remaining: password recovery/reset, invitations and membership administration, explicit role permission endpoints/tests, authentication/sensitive-endpoint rate limiting, and broader audit coverage.
 
 Dependencies: Phase 1. Verification so far: 4 backend tests pass.
 

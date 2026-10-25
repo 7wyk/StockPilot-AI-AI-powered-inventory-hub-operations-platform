@@ -6,7 +6,7 @@ Phase 5 — Frontend application, in progress.
 ## Phase status
 - Phase 0 — `DONE`: repository inspection, design, continuity documents.
 - Phase 1 — `DONE`: monorepo foundation, Django health/OpenAPI, responsive Vite shell, CI, and first checks.
-- Phase 2 — `IN_PROGRESS`: organization, membership, role, profile, audit models and migrations; JWT registration/login/refresh/logout/me; tenant-scoped organization listing; identity/tenant tests. Password recovery, invitation/team administration, organization switching, and full role matrix enforcement remain.
+- Phase 2 — `IN_PROGRESS`: organization, membership, role, profile, audit models and migrations; JWT registration/login/refresh/logout/me; tenant-scoped organization listing; identity/tenant tests; and active organization switching restricted to the authenticated user’s memberships. Password recovery, invitation/team administration, and full role matrix enforcement remain.
 - Phase 3 — `IN_PROGRESS`: categories, products, hubs, suppliers, balances, immutable stock movements, tenant-scoped APIs, dashboard summary, idempotent transactional receipt/issue/adjustment service, and inventory tests are implemented. Supplier workflows, richer filters, and frontend data wiring remain.
 - Phase 4 — `IN_PROGRESS`: restock request and inter-hub transfer state machines are implemented with permission gates, membership checks, availability validation, idempotent stock effects, movement/audit records, migrations, and lifecycle tests. More granular role policy, cancellation/refund semantics, and frontend wiring remain.
 - Phase 5 — `IN_PROGRESS`: public landing page, responsive shell, login/registration form, typed auth client, refresh/logout handling, route manifest, and Overview live dashboard summary query are implemented. Inventory/Hub/Restock/Transfer route data lists are now wired to the tenant-scoped API; create/mutation forms remain intentionally disabled until their confirmation UI is connected.
@@ -32,7 +32,7 @@ The frontend landing page and responsive shell remain available with honest empt
 
 - Foundation backend: Django check and health test passed.
 - Foundation frontend: typecheck, lint, 2 Vitest tests, production build, route manifest, and landing HTML response passed.
-- Phase 2 + 3 + 4 backend: migration drift checks reported no changes; `cd backend && ../.venv/bin/pytest -q -rs` passed 10 tests; Django check passed.
+- Phase 2 + 3 + 4 backend: migration drift checks reported no changes; `cd backend && ../.venv/bin/pytest -q -rs` passed 11 tests; Django check passed.
 - Frontend integration: typecheck, lint, 3 Vitest tests, and production build passed; `/manus-routes.json` includes `/login` and the local API health endpoint returned `{ "status": "ok", "database": "ok" }`.
 
 ## Git state
@@ -44,6 +44,7 @@ The frontend landing page and responsive shell remain available with honest empt
 - Phase 4 workflow milestone commit: `bac38eebaa081493957a9df350282e5a0abec204`.
 - Frontend auth/live metrics commit: `841afcc2d058f1ec90177b657f40883406602cc8`.
 - Frontend live resource lists commit: `a62f6e4b8ac192c720ccbed66f4d297eec82ac37`.
+- Active organization switch commit: `ae85d4c33a6a26bbde7af6a2146bee58d7783f89`.
 - This status update will be recorded in the next documentation checkpoint.
 - The requested GitHub repository is empty; the canonical-transfer confirmation was declined. The managed repository remains canonical, and no plain GitHub push was attempted.
 
@@ -53,4 +54,4 @@ Password recovery, invitation/team administration, organization switching, full 
 
 ## Exact next task
 
-Finish the remaining Phase 2 authorization surface and continue frontend data wiring: organization switch/profile context, invitation/membership administration, explicit role permission tests, auth rate limiting, and confirmation-driven create/mutation forms for products, hubs, restock requests, and transfers. Keep all unavailable actions clearly labeled rather than silently mutating.
+Finish the remaining Phase 2 authorization surface and continue frontend data wiring: invitation/membership administration, explicit role permission tests, auth rate limiting, and confirmation-driven create/mutation forms for products, hubs, restock requests, and transfers. Keep all unavailable actions clearly labeled rather than silently mutating.
