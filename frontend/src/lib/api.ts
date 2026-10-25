@@ -42,6 +42,106 @@ export type MemberRecord = { id: number; user_id: number; email: string; first_n
 export type InvitationRecord = { id: number; email: string; role: string; role_label: string; status: 'pending' | 'accepted' | 'canceled' | 'expired'; expires_at: string; accepted_at: string | null; created_at: string; invited_by_name: string; invitation_token?: string }
 export type PermissionMatrixRecord = { role: string; permissions: string[] }
 
+// Analytics types
+export type AnalyticsOverview = {
+  active_products: number
+  total_units: string
+  inventory_value: string
+  low_stock_products: number
+  out_of_stock_products: number
+  active_hubs: number
+  movement_volume_30d: number
+  data_status: 'empty' | 'live'
+}
+
+export type MovementTrendDay = {
+  date: string
+  total: number
+  receipts: number
+  issues: number
+  adjustments: number
+  transfers_in: number
+  transfers_out: number
+}
+
+export type MovementTrends = {
+  period_days: number
+  data_status: 'live' | 'insufficient_history'
+  trends: MovementTrendDay[]
+}
+
+export type HubAnalytics = {
+  hub_id: number
+  hub_name: string
+  hub_code: string
+  total_units: string
+  total_value: string
+  product_count: number
+  low_stock_count: number
+  out_of_stock_count: number
+}
+
+export type StockHealthSummary = {
+  total_products: number
+  healthy: number
+  low_stock: number
+  out_of_stock: number
+  excess: number
+  slow_moving: number
+}
+
+export type StockHealthItem = {
+  product_id: number
+  product_name: string
+  sku: string
+  on_hand: string
+  reorder_threshold: string
+  target_stock_level: string
+  status: string
+  has_recent_movement: boolean
+}
+
+export type StockHealthResponse = {
+  lookback_days: number
+  summary: StockHealthSummary
+  items: StockHealthItem[]
+}
+
+export type LowStockProduct = {
+  product_id: number
+  product_name: string
+  sku: string
+  on_hand: string
+  reorder_threshold: string
+  target_stock_level: string
+  deficit: string
+  category: string | null
+}
+
+export type RestockRecommendation = {
+  product_id: number
+  product_name: string
+  sku: string
+  on_hand: string
+  target_stock_level: string
+  recommended_quantity: string
+  cost_price: string
+  estimated_cost: string
+  category: string | null
+  priority: 'critical' | 'high' | 'low'
+}
+
+export type ReportRecord = {
+  id: number
+  report_type: string
+  format: string
+  status: string
+  filters: Record<string, unknown>
+  created_at: string
+  completed_at: string | null
+  requested_by_email: string | null
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ACCESS_KEY = 'stockpilot.access'
 const REFRESH_KEY = 'stockpilot.refresh'
@@ -129,6 +229,37 @@ export const api = {
   removeMember: (id: number) => request<void>(`/organizations/members/${id}/`, { method: 'DELETE' }),
   cancelInvitation: (id: number) => request<InvitationRecord>(`/organizations/invitations/${id}/cancel/`, { method: 'POST' }),
   resendInvitation: (id: number) => request<InvitationRecord>(`/organizations/invitations/${id}/resend/`, { method: 'POST' }),
+
+  // Analytics
+  analyticsOverview: () => request<AnalyticsOverview>('/analytics/overview/'),
+  analyticsMovements: (days = 30) => request<MovementTrends>(`/analytics/movements/?days=${days}`),
+  analyticsHubs: () => request<HubAnalytics[]>('/analytics/hubs/'),
+  analyticsStockHealth: (lookbackDays = 30) => request<StockHealthResponse>(`/analytics/stock-health/?lookback_days=${lookbackDays}`),
+  analyticsLowStock: (params?: { hub_id?: number; category_id?: number }) => {
+    const qs = new URLSearchParams()
+    if (params?.hub_id) qs.set('hub_id', String(params.hub_id))
+    if (params?.category_id) qs.set('category_id', String(params.category_id))
+    const query = qs.toString()
+    return request<LowStockProduct[]>(`/analytics/low-stock/${query ? '?' + query : ''}`)
+  },
+  analyticsRestockRecommendations: () => request<RestockRecommendation[]>('/analytics/restock-recommendations/'),
+  reportsList: () => request<ReportRecord[]>('/reports/'),
+  generateReport: async (payload: { report_type: string; format: string; filters?: Record<string, unknown> }) => {
+    const headers = new Headers()
+    headers.set('Content-Type', 'application/json')
+    if (authStore.access) headers.set('Authorization', `Bearer ${authStore.access}`)
+    const resp = await fetch(`${API_BASE}/reports/generate/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+    })
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({})) as { detail?: string }
+      throw new Error(body.detail ?? `Report generation failed (${resp.status})`)
+    }
+    return resp
+  },
+
   logout: async () => {
     const refresh = window.localStorage.getItem(REFRESH_KEY)
     if (refresh && authStore.access) await request<void>('/auth/logout/', { method: 'POST', body: JSON.stringify({ refresh }) }, false).catch(() => undefined)

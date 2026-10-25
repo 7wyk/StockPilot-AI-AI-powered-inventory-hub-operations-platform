@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "apps.movements",
     "apps.restocking",
     "apps.transfers",
+    "apps.analytics",
 ]
 
 MIDDLEWARE = [
