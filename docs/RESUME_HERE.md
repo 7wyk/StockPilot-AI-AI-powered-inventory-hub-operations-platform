@@ -10,6 +10,7 @@ Read `README.md`, `PROJECT_STATUS.md`, `IMPLEMENTATION_PLAN.md`, and `ARCHITECTU
 - Branch: `main`; Phase 1 foundation, Phase 2 identity foundation, Phase 3 core inventory, and Phase 4 workflow milestones are committed.
 - The requested GitHub repository transition was declined; the managed repository remains canonical. Do not reopen the transfer unless the user explicitly asks.
 - Server/database capabilities are enabled; frontend Preview runtime is port 3000.
+- Final Manus-to-local handoff: source checkpoint `20df3a414c6b5717683e24da2535fa3e275b3fbb` is pushed to `main`. Feature development is stopped in Manus; continue in the local Antigravity environment.
 
 ## What works
 
@@ -21,6 +22,8 @@ The core inventory backend has categories, products, hubs, suppliers, supplier-p
 
 Begin Phase 6 analytics and reports: deterministic tenant-scoped risk/valuation/movement calculations, CSV/PDF exports, secure file handling, and export tests. Keep integrations explicit and do not mark provider-dependent storage complete without credentials.
 
+Do not start this milestone in Manus. Clone or pull `https://github.com/7wyk/StockPilot-AI-AI-powered-inventory-hub-operations-platform` on branch `main` and continue locally.
+
 ## Commands/checks
 
 From root: `pnpm install --frozen-lockfile`. Frontend: `pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build`. Backend: `cd backend && ../.venv/bin/python manage.py check && ../.venv/bin/pytest -q -rs`. Preview: `pnpm --dir frontend dev` and verify `/manus-routes.json`.
@@ -28,6 +31,8 @@ From root: `pnpm install --frozen-lockfile`. Frontend: `pnpm --dir frontend type
 ## Known blockers
 
 No Supabase, Upstash, or Groq credentials are available. Keep external adapters configurable and make missing integrations fail explicitly without breaking core tests. No deployment URL is verified. Production PostgreSQL integration still needs a Supabase DSN; local unsupported-DSN checks use SQLite.
+
+Required external setup remains Supabase PostgreSQL, Supabase Storage, Upstash Redis, Groq API, Render, Vercel, production environment variables, and email delivery if required.
 
 ## Related documents
 

@@ -40,7 +40,13 @@ Dependencies: Phases 2–4 for live workflows. Verification: frontend typecheck,
 
 Mutation milestone checkpoint: `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
 
-## Phase 6 — Analytics and reports — TODO
+## Manus handoff checkpoint — COMPLETE
+
+Feature development stops here for the Manus workspace. The complete verified source is committed on `main` at pre-handoff checkpoint `20df3a414c6b5717683e24da2535fa3e275b3fbb` and pushed to GitHub. Continue development outside Manus in the local Antigravity environment. Do not begin Phase 6 in Manus.
+
+The available verification suite passed: backend migration drift check, Django system check, 18 backend tests, frontend TypeScript check, ESLint, 7 frontend tests, production build, route-manifest validation, and `git diff --check`. No production credentials or provider integrations were verified. Required external setup remains Supabase PostgreSQL/Storage, Upstash Redis, Groq API, Render, Vercel, production environment variables, and email delivery if required.
+
+## Phase 6 — Analytics and reports — TODO — NEXT OUTSIDE MANUS
 
 Implement deterministic risk, low-stock, stockout, valuation, slow/excess, movement, imbalance calculations, report metadata, CSV/PDF exports, storage, and optional async generation. Verify calculations against fixtures and ensure reports cannot cross tenants.
 

@@ -1,7 +1,7 @@
 # StockPilot AI — Project Status
 
 ## Current phase
-Phase 5 — Frontend application, in progress.
+Phase 5 — Frontend application, complete for this Manus checkpoint; development is now continuing in the local Antigravity environment.
 
 ## Phase status
 - Phase 0 — `DONE`: repository inspection, design, continuity documents.
@@ -38,6 +38,8 @@ The frontend landing page and responsive shell remain available with honest empt
 - Team administration milestone: frontend typecheck, lint, 3 Vitest tests, and production build passed; `/app/team` is included in `frontend/public/manus-routes.json`.
 - Confirmation-driven mutation milestone: backend migration drift check, Django check, and 18 backend tests passed; frontend typecheck, ESLint, 7 Vitest tests, production build, and route-manifest validation passed.
 - Latest mutation milestone commit: `5180c11c2a39728aa7c5f505b7d26fdb5a380edc`.
+- Final pre-handoff source checkpoint: `20df3a414c6b5717683e24da2535fa3e275b3fbb`.
+- Manus handoff state: feature development stopped; do not begin Phase 6 in Manus.
 - Frontend integration: typecheck, lint, 3 Vitest tests, and production build passed; `/manus-routes.json` includes `/login` and the local API health endpoint returned `{ "status": "ok", "database": "ok" }`.
 
 ## Git state
@@ -60,4 +62,4 @@ Password recovery, broader audit coverage, owner transfer, supplier-product rela
 
 ## Exact next task
 
-Implement analytics and reports with deterministic calculations, tenant-safe CSV/PDF exports, and secure file handling. Do not begin AI, Redis, or Celery work until report calculations and export tests are real.
+Next implementation milestone outside Manus: Phase 6 — deterministic analytics and reports with tenant-safe CSV/PDF exports and secure file handling. Continue from the GitHub `main` branch in the local Antigravity environment.
