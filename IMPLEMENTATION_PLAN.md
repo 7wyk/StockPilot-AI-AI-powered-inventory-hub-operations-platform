@@ -18,23 +18,25 @@ Dependencies: Phase 1. Verification so far: 4 backend tests pass.
 
 ## Phase 3 — Core inventory — IN_PROGRESS
 
-Implemented so far: normalized organization-scoped categories, products, hubs, suppliers and supplier-product links; product/hub balances with database constraints; immutable signed stock movements; tenant-scoped DRF APIs for categories, products, hubs, suppliers, movements, dashboard summary, and product stock mutations; idempotency keys; row locking; receipt/issue/adjustment validation; negative/available-stock protection; audit records; migrations; and seven backend tests.
+Implemented so far: normalized organization-scoped categories, products, hubs, suppliers and supplier-product links; product/hub balances with database constraints; immutable signed stock movements; tenant-scoped DRF APIs for categories, products, hubs, suppliers, movements, dashboard summary, and product stock mutations; idempotency keys; row locking; receipt/issue/adjustment validation; negative/available-stock protection; audit records; migrations; and inventory tests.
 
 Remaining: richer pagination/filtering, supplier workflows, reservation semantics, frontend API wiring, and additional performance/security coverage. Every quantity-changing operation must continue to use the transactional service boundary rather than direct model writes.
 
-Dependencies: Phase 2. Verification: migration drift check, Django check, and 7 backend tests pass.
+Dependencies: Phase 2. Verification: migration drift check, Django check, and the inventory tests are included in the current 10-test backend suite.
 
-## Phase 4 — Transfers and restocking — TODO
+## Phase 4 — Restocking and transfers — IN_PROGRESS
 
-Implement restock requests and inter-hub transfers with explicit lifecycle states, permission checks, source-availability validation, idempotent dispatch/receipt operations, movement/audit records, and backend tests. Verify duplicate dispatch/receipt protection, source availability, and permission enforcement.
+Implemented so far: restock request state transitions `draft → pending → approved → ordered → received`, cancellation before receipt, inter-hub transfer transitions `draft → pending → approved → dispatched → received`, cancellation before dispatch, role gates, membership checks, source availability validation, row locks, idempotent restock receipt/source dispatch/destination receipt effects, immutable movement/audit records, migrations, and lifecycle tests.
 
-Dependencies: Phase 3. Verification: lifecycle, concurrency, rollback, and authorization tests.
+Remaining: finer-grained policy per transition, supplier purchase-order integration, richer transfer metadata, cancellation/refund semantics after operational handoff, and frontend workflow screens. Verification: the full backend suite currently passes 10 tests.
+
+Dependencies: Phases 2–3. Verification: lifecycle, insufficient-stock, idempotency, migration, and authorization checks.
 
 ## Phase 5 — Frontend application — IN_PROGRESS
 
-The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, and responsive behavior. Live domain workflows remain to be connected after Phases 2–4.
+The public landing page and responsive workspace shell are implemented with polished navigation, dashboard empty states, AI assistant entry, route manifest, reduced-motion support, and responsive behavior. Next implement an authenticated API client and connect Overview, Products, Hubs, Transfers, and Restock screens with loading/error/empty/confirmation states.
 
-Dependencies: Phase 1 for shell, Phases 2–4 for live workflows. Verification: frontend component/page/action tests and a responsive route audit.
+Dependencies: Phases 2–4 for live workflows. Verification: frontend component/page/action tests and a responsive route audit.
 
 ## Phase 6 — Analytics and reports — TODO
 
