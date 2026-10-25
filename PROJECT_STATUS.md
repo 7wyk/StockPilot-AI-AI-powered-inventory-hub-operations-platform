@@ -34,7 +34,8 @@ The frontend landing page and responsive shell remain available with honest empt
 
 - Branch: `main`.
 - Phase 1 foundation commit: `a71c7025b2f04232520b11f2912a23b473210d86`.
-- Phase 2 identity code and this status update are the next checkpoint commit.
+- Phase 2 identity milestone commit: `f666781bfd428c7e05c38a691905f7954c96094d`.
+- Phase 2 identity milestone commit: `f666781bfd428c7e05c38a691905f7954c96094d`.
 - The requested GitHub repository is empty; the canonical-transfer confirmation was declined. The managed repository remains canonical, and no plain GitHub push was attempted.
 
 ## Known bugs and limitations
